@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Maker Tool</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-2">Image Maker Tool</h1>
+            <p class="text-gray-400">Create motivational quotes with customizable backgrounds and your logo</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Controls Panel -->
+            <div class="bg-gray-800 p-6 rounded-lg border border-purple-500 shadow-lg shadow-purple-500/20">
+                <h2 class="text-2xl font-bold mb-4 text-purple-400">Customize Your Image</h2>
+                
+                <!-- Text Input -->
+                <div class="mb-4">
+                    <label for="quote-text" class="block mb-2 text-sm font-medium text-gray-300">Your Text</label>
+                    <textarea id="quote-text" rows="4" class="block p-2.5 w-full text-sm rounded-lg border bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-purple-500 focus:border-purple-500" placeholder="Enter your motivational quote here..."></textarea>
+                </div>
+                
+                <!-- Logo Upload -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300" for="logo-upload">Upload Logo</label>
+                    <div class="flex gap-2">
+                        <input class="block w-full text-sm rounded-lg cursor-pointer focus:outline-none bg-gray-700 border-gray-600 placeholder-gray-400 text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700" id="logo-upload" type="file" accept="image/*">
+                        <button onclick="document.getElementById('logo-upload').value=''; handleLogoUpload({target:{files:[]}})" class="px-4 py-2 text-sm font-medium text-white bg-gray-600 rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-400">
+                            Reset to Default
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Background Options -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Background Style</label>
+                    <div class="grid grid-cols-3 gap-3" id="bg-options">
+                        <div class="bg-option active" data-bg="bg-gradient-beige" style="background-color: #e2c9b1; height: 50px; border-radius: 8px; cursor: pointer;"></div>
+                        <div class="bg-option" data-bg="bg-gradient-blue" style="background: linear-gradient(to right, #2980b9, #6dd5fa); height: 50px; border-radius: 8px; cursor: pointer;"></div>
+                        <div class="bg-option" data-bg="bg-gradient-purple" style="background: linear-gradient(to right, #834d9b, #d04ed6); height: 50px; border-radius: 8px; cursor: pointer;"></div>
+                        <div class="bg-option" data-bg="bg-gradient-orange" style="background: linear-gradient(to right, #f12711, #f5af19); height: 50px; border-radius: 8px; cursor: pointer;"></div>
+                        <div class="bg-option" data-bg="bg-gradient-green" style="background: linear-gradient(to right, #11998e, #38ef7d); height: 50px; border-radius: 8px; cursor: pointer;"></div>
+                        <div class="bg-option" data-bg="bg-gradient-gray" style="background-color: #d1d1d1; height: 50px; border-radius: 8px; cursor: pointer;"></div>
+                    </div>
+                </div>
+                
+                <!-- Text Controls -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Text Settings</label>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="font-size" class="block mb-1 text-sm text-gray-400">Font Size</label>
+                            <input id="font-size" type="range" min="16" max="32" value="29" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="font-size-value" class="text-xs text-gray-400">29px</span>
+                        </div>
+                        <div>
+                            <label for="text-color" class="block mb-1 text-sm text-gray-400">Text Color</label>
+                            <input type="color" id="text-color" value="#000000" class="bg-gray-700 h-10 rounded w-full cursor-pointer">
+                        </div>
+                    </div>
+                    
+                    <!-- Text Position Controls -->
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="text-position" class="block mb-1 text-sm text-gray-400">Text Position</label>
+                            <select id="text-position" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                                <option value="center">Center</option>
+                                <option value="top">Top</option>
+                                <option value="bottom">Bottom</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="text-align" class="block mb-1 text-sm text-gray-400">Text Alignment</label>
+                            <select id="text-align" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                                <option value="center">Center</option>
+                                <option value="left">Left</option>
+                                <option value="right">Right</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Text Spacing Controls -->
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="line-height" class="block mb-1 text-sm text-gray-400">Line Height</label>
+                            <input id="line-height" type="range" min="1" max="3" step="0.1" value="1.5" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="line-height-value" class="text-xs text-gray-400">1.5x</span>
+                        </div>
+                        <div>
+                            <label for="letter-spacing" class="block mb-1 text-sm text-gray-400">Letter Spacing</label>
+                            <input id="letter-spacing" type="range" min="-2" max="10" value="0" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="letter-spacing-value" class="text-xs text-gray-400">0px</span>
+                        </div>
+                    </div>
+
+                    <!-- Font Style Controls -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="font-family" class="block mb-1 text-sm text-gray-400">Font Style</label>
+                            <select id="font-family" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                                <option value="Roboto">Roboto</option>
+                                <option value="Poppins">Poppins</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Open Sans">Open Sans</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="font-weight" class="block mb-1 text-sm text-gray-400">Font Weight</label>
+                            <select id="font-weight" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                                <option value="bolder">Bolder</option>
+                                <option value="normal">Normal</option>
+                                <option value="bold">Bold</option>
+                                <option value="lighter">Light</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Effects -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Image Effects</label>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="brightness" class="block mb-1 text-sm text-gray-400">Brightness</label>
+                            <input id="brightness" type="range" min="0.5" max="1.5" step="0.1" value="1" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="brightness-value" class="text-xs text-gray-400">100%</span>
+                        </div>
+                        <div>
+                            <label for="contrast" class="block mb-1 text-sm text-gray-400">Contrast</label>
+                            <input id="contrast" type="range" min="0.5" max="1.5" step="0.1" value="1" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="contrast-value" class="text-xs text-gray-400">100%</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="saturation" class="block mb-1 text-sm text-gray-400">Saturation</label>
+                            <input id="saturation" type="range" min="0" max="2" step="0.1" value="1.4" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="saturation-value" class="text-xs text-gray-400">140%</span>
+                        </div>
+                        <div>
+                            <label for="blur" class="block mb-1 text-sm text-gray-400">Blur Effect</label>
+                            <input id="blur" type="range" min="0" max="5" step="0.1" value="0" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="blur-value" class="text-xs text-gray-400">0px</span>
+                        </div>
+                    </div>
+
+                    <!-- Additional Effects -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="gradient-overlay" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" id="gradient-overlay" class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Gradient Overlay
+                            </label>
+                        </div>
+                        <div>
+                            <label for="texture-overlay" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" id="texture-overlay" class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Texture Effect
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logo Controls -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Logo Settings</label>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="logo-size" class="block mb-1 text-sm text-gray-400">Logo Size</label>
+                            <input id="logo-size" type="range" min="30" max="200" value="96" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="logo-size-value" class="text-xs text-gray-400">96px</span>
+                        </div>
+                        <div>
+                            <label for="logo-opacity" class="block mb-1 text-sm text-gray-400">Logo Opacity</label>
+                            <input id="logo-opacity" type="range" min="10" max="100" value="100" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="logo-opacity-value" class="text-xs text-gray-400">100%</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="logo-position" class="block mb-1 text-sm text-gray-400">Logo Position</label>
+                            <select id="logo-position" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                                <option value="top">Top</option>
+                                <option value="bottom">Bottom</option>
+                                <option value="center">Center</option>
+                                <option value="top-left">Top Left</option>
+                                <option value="top-right">Top Right</option>
+                                <option value="bottom-left">Bottom Left</option>
+                                <option value="bottom-right">Bottom Right</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="logo-padding" class="block mb-1 text-sm text-gray-400">Logo Padding</label>
+                            <input id="logo-padding" type="range" min="0" max="50" value="20" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-600">
+                            <span id="logo-padding-value" class="text-xs text-gray-400">20px</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Features -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Advanced Settings</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="text-shadow" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" id="text-shadow" class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Text Shadow
+                            </label>
+                        </div>
+                        <div>
+                            <label for="watermark" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" checked id="watermark" class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Add Watermark
+                            </label>
+                        </div>
+                        <div>
+                            <label for="overlay" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" id="overlay" class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Dark Overlay
+                            </label>
+                        </div>
+                        <div>
+                            <label for="rounded-corners" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" checked id="rounded-corners" class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Rounded Corners
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Templates -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Quick Templates</label>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <button id="template-motivational" class="text-white bg-gradient-to-r from-purple-400 to-pink-400 hover:bg-gradient-to-l focus:ring-2 focus:ring-purple-400 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                            Motivational Quote
+                        </button>
+                        <button id="template-business" class="text-white bg-gradient-to-r from-blue-400 to-cyan-400 hover:bg-gradient-to-l focus:ring-2 focus:ring-blue-400 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                            Business Quote
+                        </button>
+                        <button id="template-wisdom" class="text-white bg-gradient-to-r from-amber-400 to-orange-400 hover:bg-gradient-to-l focus:ring-2 focus:ring-amber-400 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                            Wisdom Quote
+                        </button>
+                        <button id="template-nature" class="text-white bg-gradient-to-r from-green-400 to-emerald-400 hover:bg-gradient-to-l focus:ring-2 focus:ring-green-400 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                            Nature Quote
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Color Schemes -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Color Schemes</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <div class="color-scheme cursor-pointer p-2 rounded-lg text-center hover:bg-gray-700" data-colors='{"bg":"#F8F9FA","text":"#212529"}'>
+                            <div class="h-8 rounded bg-gray-100 mb-1"></div>
+                            <span class="text-xs">Clean</span>
+                        </div>
+                        <div class="color-scheme cursor-pointer p-2 rounded-lg text-center hover:bg-gray-700" data-colors='{"bg":"#212529","text":"#F8F9FA"}'>
+                            <div class="h-8 rounded bg-gray-900 mb-1"></div>
+                            <span class="text-xs">Dark</span>
+                        </div>
+                        <div class="color-scheme cursor-pointer p-2 rounded-lg text-center hover:bg-gray-700" data-colors='{"bg":"#4A90E2","text":"#FFFFFF"}'>
+                            <div class="h-8 rounded bg-blue-500 mb-1"></div>
+                            <span class="text-xs">Bold</span>
+                        </div>
+                        <div class="color-scheme cursor-pointer p-2 rounded-lg text-center hover:bg-gray-700" data-colors='{"bg":"#F8E9E9","text":"#D64545"}'>
+                            <div class="h-8 rounded bg-red-100 mb-1"></div>
+                            <span class="text-xs">Soft</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Filters -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Quick Filters</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button class="quick-filter p-2 rounded-lg text-center hover:bg-gray-700 text-sm" data-filter="none">
+                            Normal
+                        </button>
+                        <button class="quick-filter p-2 rounded-lg text-center hover:bg-gray-700 text-sm" data-filter="vintage">
+                            Vintage
+                        </button>
+                        <button class="quick-filter p-2 rounded-lg text-center hover:bg-gray-700 text-sm" data-filter="dramatic">
+                            Dramatic
+                        </button>
+                        <button class="quick-filter p-2 rounded-lg text-center hover:bg-gray-700 text-sm" data-filter="soft">
+                            Soft
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Auto Text Features -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-300">Smart Text Features</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="auto-resize" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" id="auto-resize" class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Auto-resize Text
+                            </label>
+                        </div>
+                        <div>
+                            <label for="text-balance" class="flex items-center mb-1 text-sm text-gray-400">
+                                <input type="checkbox" id="text-balance" checked class="mr-2 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500">
+                                Balance Text Lines
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Footer Text -->
+                <div class="mb-6">
+                    <label for="footer-text" class="block mb-2 text-sm font-medium text-gray-300">Footer Text</label>
+                    <input type="text" id="footer-text" class="block p-2.5 w-full text-sm rounded-lg border bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-purple-500 focus:border-purple-500" placeholder="100 100 100" value="@BramcharyaQuotes">
+                </div>
+                
+                <!-- Generate Button -->
+                <button id="generate-btn" class="w-full text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-3 text-center">
+                    Generate Image
+                </button>
+                
+                <!-- Image Ratio Selector -->
+                <div class="mt-4 mb-4">
+                    <label for="image-ratio" class="block mb-2 text-sm font-medium text-gray-300">Download Format</label>
+                    <select id="image-ratio" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5">
+                        <option value="preview">Exactly As Preview</option>
+                        <option value="square">Square (1:1) - 1080x1080px - Instagram</option>
+                        <option value="portrait">Portrait (4:5) - 1080x1350px - Instagram</option>
+                        <option value="landscape">Landscape (1.91:1) - 1200x630px - Facebook/Twitter</option>
+                        <option value="story">Story (9:16) - 1080x1920px - Instagram/Facebook Story</option>
+                        <option value="original">Original Size</option>
+                    </select>
+                </div>
+                
+                <!-- Download Button -->
+                <button id="download-btn" class="mt-4 w-full text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-3 text-center">
+                    Download Image
+                </button>
+            </div>
+            
+            <!-- Preview Panel -->
+            <div class="bg-gray-800 p-6 rounded-lg border border-purple-500 shadow-lg shadow-purple-500/20">
+                <h2 class="text-2xl font-bold mb-4 text-purple-400">Preview</h2>
+                <div id="preview-container" class="bg-gradient-beige relative rounded-lg flex items-center justify-center overflow-hidden" style="min-height: 500px; background-color: #e2c9b1;">
+                    <div id="preview-content" class="p-8 text-center">
+                        <div id="logo-container" class="flex justify-center mb-4">
+                            <img id="preview-logo" class="max-h-24 hidden" src="" alt="Logo">
+                        </div>
+                        <div id="preview-text" class="text-black font-bold mb-4 text-xl">Your motivational quote will appear here...</div>
+                        <div id="preview-footer" class="text-red-500 font-bold">100 100 100</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-16 pb-8 text-center text-gray-500 text-sm">
+        <p>Created with ❤️ using Flowbite CSS and JavaScript</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
